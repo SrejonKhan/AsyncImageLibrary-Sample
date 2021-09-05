@@ -34,6 +34,7 @@ public class ImageLoader : MonoBehaviour
 
     public void SelectImages()
     {
+        totalSelectedText.text = "0 Images Selected";
         KillAllChild(gallaryGrid);
         string[] paths = fileExplorer.OpenExplorer();
         StartCoroutine(StageImages(paths));

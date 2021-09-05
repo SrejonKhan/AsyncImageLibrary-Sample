@@ -1,4 +1,5 @@
 using AsyncImageLibrary;
+using SkiaSharp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +8,9 @@ using UnityEngine.UI;
 
 public class ImageExporter : MonoBehaviour
 {
+    public Text widthText;
+    public Text heightText;
+    public Text formatText;
 
     public GameObject exportPanel;
     public RawImage imagePreview;
@@ -18,6 +22,8 @@ public class ImageExporter : MonoBehaviour
     public Button exportButton;
 
     private AsyncImage asyncImage;
+    private SKImageInfo imageInfo;
+    private SKEncodedImageFormat imageFormat;
     private ImageProcessor imageProcessor;
     public static ImageExporter instance;
 
@@ -38,8 +44,12 @@ public class ImageExporter : MonoBehaviour
     public void OpenExportPanel(AsyncImage asyncImage)
     {
         this.asyncImage = asyncImage;
-        imagePreview.texture = asyncImage.Texture;
-        imagePreview.GetComponent<AspectRatioFitter>().aspectRatio = (float)asyncImage.Width / (float)asyncImage.Height;
+        var (info, format) = asyncImage.GetInfo();
+        imageInfo = info;
+        imageFormat = format;
+        UpdateInfo();
+
+        UpdateTexture();
 
         exportPanel.SetActive(true);
     }
@@ -55,7 +65,16 @@ public class ImageExporter : MonoBehaviour
         {
             resizeValueFields[i].SetActive(false);
         }
-        resizeValueFields[resizeDropdown.value].SetActive(true);
+        if (resizeDropdown.value != 1)
+        {
+            resizeValueFields[resizeDropdown.value].SetActive(true);
+        }
+        else // for target dimension (x, y input field)
+        {
+            resizeValueFields[resizeDropdown.value].SetActive(true);
+            resizeValueFields[resizeDropdown.value + 1].SetActive(true);
+        }
+
     }
 
     public void ResizeImage()
@@ -69,8 +88,12 @@ public class ImageExporter : MonoBehaviour
                 imageProcessor.DivideByResize(asyncImage, int.Parse(resizeValueFields[0].GetComponent<InputField>().text),
                 () =>
                 {
+                    asyncImage.GenerateTexture(UpdateTexture);
+                    imageInfo.Width = asyncImage.Bitmap.Width;
+                    imageInfo.Height = asyncImage.Bitmap.Height;
                     exportButton.interactable = true;
                     resizeButton.interactable = true;
+                    UpdateInfo();
                 });
                 break;
             case 1:
@@ -81,56 +104,72 @@ public class ImageExporter : MonoBehaviour
                 imageProcessor.TargetDimensionResize(asyncImage, targetDimensions,
                 () =>
                 {
+                    asyncImage.GenerateTexture(UpdateTexture);
+                    imageInfo.Width = asyncImage.Bitmap.Width;
+                    imageInfo.Height = asyncImage.Bitmap.Height;
                     exportButton.interactable = true;
                     resizeButton.interactable = true;
+                    UpdateInfo();
                 });
                 break;
         }
+    }
+
+    void UpdateInfo() 
+    {
+        widthText.text = imageInfo.Width + "";
+        heightText.text = imageInfo.Height + "";
+        formatText.text = imageFormat + "";
+    }
+
+    void UpdateTexture()
+    {
+        imagePreview.texture = asyncImage.Texture;
+        imagePreview.GetComponent<AspectRatioFitter>().aspectRatio = (float)asyncImage.Width / (float)asyncImage.Height;
     }
 
     public void Export()
     {
         string extension = "";
 
-        var (info, format) = asyncImage.GetInfo();
 
 
-        switch (format)
+        switch (imageFormat)
         {
-            case SkiaSharp.SKEncodedImageFormat.Astc:
+            case SKEncodedImageFormat.Astc:
                 extension = ".astc";
                 break;
-            case SkiaSharp.SKEncodedImageFormat.Bmp:
+            case SKEncodedImageFormat.Bmp:
                 extension = ".bmp";
                 break;
-            case SkiaSharp.SKEncodedImageFormat.Gif:
+            case SKEncodedImageFormat.Gif:
                 extension = ".gif";
                 break;
-            case SkiaSharp.SKEncodedImageFormat.Ico:
+            case SKEncodedImageFormat.Ico:
                 extension = ".ico";
                 break;
-            case SkiaSharp.SKEncodedImageFormat.Jpeg:
+            case SKEncodedImageFormat.Jpeg:
                 extension = ".jpeg";
                 break;
-            case SkiaSharp.SKEncodedImageFormat.Png:
+            case SKEncodedImageFormat.Png:
                 extension = ".png";
                 break;
-            case SkiaSharp.SKEncodedImageFormat.Wbmp:
+            case SKEncodedImageFormat.Wbmp:
                 extension = ".wbmp";
                 break;
-            case SkiaSharp.SKEncodedImageFormat.Webp:
+            case SKEncodedImageFormat.Webp:
                 extension = ".webp";
                 break;
-            case SkiaSharp.SKEncodedImageFormat.Pkm:
+            case SKEncodedImageFormat.Pkm:
                 extension = ".pkm";
                 break;
-            case SkiaSharp.SKEncodedImageFormat.Ktx:
+            case SKEncodedImageFormat.Ktx:
                 extension = ".ktx";
                 break;
-            case SkiaSharp.SKEncodedImageFormat.Dng:
+            case SKEncodedImageFormat.Dng:
                 extension = ".dng";
                 break;
-            case SkiaSharp.SKEncodedImageFormat.Heif:
+            case SKEncodedImageFormat.Heif:
                 extension = ".heif";
                 break;
         }
