@@ -22,20 +22,18 @@ public class FileExplorer : MonoBehaviour
 
     string[] WindowsFileExplorer()
     {
-#if UNITY_STANDALONE_WIN 
+        string[] paths = new string[0];
+#if UNITY_STANDALONE_WIN
         var bp = new BrowserProperties();
         bp.filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
         bp.filterIndex = 0;
-
-        string[] paths = new string[0];
 
         new FileBrowser().OpenMultiSelectFileBrowser(bp, selectedPaths =>
         {
             paths = selectedPaths;
         });
-
-        return paths;
 #endif
+        return paths;
     }
     string[] AndroidIosPicker()
     {
@@ -64,18 +62,17 @@ public class FileExplorer : MonoBehaviour
 
     public string WindowsSaveLocation(string defExtention)
     {
+        string path = "";
 #if UNITY_STANDALONE_WIN
         var bp = new BrowserProperties();
         bp.filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
         bp.filterIndex = 0;
 
-        string path = "";
-
         new FileBrowser().SaveFileBrowser(bp, "Image", defExtention,  selectedPath =>
         {
             path = selectedPath;
         });
-        return path;
 #endif
+        return path;
     }
 }
