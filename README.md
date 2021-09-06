@@ -6,8 +6,8 @@ Please keep in mind, current status of this project is unstable and sketchy.
 
 # Dependencies
 * [Another File Browser](https://github.com/SrejonKhan/AnotherFileBrowser) for opening File Explorer in Windows Standalone.
-* [Unity Native File Picker Plugin]("https://github.com/yasirkula/UnityNativeFilePicker") for opening File Picker in Android & IOS.
-* [Hack Font]("https://github.com/source-foundry/Hack") for checking Typeface loading in runtime. 
+* [Unity Native File Picker Plugin](https://github.com/yasirkula/UnityNativeFilePicker) for opening File Picker in Android & IOS.
+* [Hack Font](https://github.com/source-foundry/Hack) for checking Typeface loading in runtime. 
 
 # Known Issues
 - You may face this following error after opening it in 2020.3.x for first time 
