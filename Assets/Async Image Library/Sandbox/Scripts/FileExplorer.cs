@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,19 +11,18 @@ using AnotherFileBrowser.Windows;
 public class FileExplorer : MonoBehaviour
 {
 
-    public string[] OpenExplorer()
+    public void OpenExplorer(Action<string[]> paths)
     {
 
 #if UNITY_STANDALONE_WIN
-        return WindowsFileExplorer();
+        WindowsFileExplorer(paths);
 #elif UNITY_ANDROID || UNITY_IOS
-        return AndroidIosPicker();
+        AndroidIosPicker(paths);
 #endif
     }
 
-    string[] WindowsFileExplorer()
+    void WindowsFileExplorer(Action<string[]> paths)
     {
-        string[] paths = new string[0];
 #if UNITY_STANDALONE_WIN
         var bp = new BrowserProperties();
         bp.filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
@@ -30,12 +30,11 @@ public class FileExplorer : MonoBehaviour
 
         new FileBrowser().OpenMultiSelectFileBrowser(bp, selectedPaths =>
         {
-            paths = selectedPaths;
+            paths(selectedPaths);
         });
 #endif
-        return paths;
     }
-    string[] AndroidIosPicker()
+    void AndroidIosPicker(Action<string[]> paths)
     {
 #if UNITY_ANDROID
         // Use MIMEs on Android
@@ -44,7 +43,6 @@ public class FileExplorer : MonoBehaviour
         // Use UTIs on iOS
         string[] fileTypes = new string[] { "public.image", "public.movie" };
 #endif
-        string[] paths = new string[0];
 
         // Pick image(s) and/or video(s)
         NativeFilePicker.Permission permission = NativeFilePicker.PickMultipleFiles((selectedPaths) =>
@@ -53,11 +51,9 @@ public class FileExplorer : MonoBehaviour
                 Debug.Log("Operation cancelled");
             else
             {
-                paths = selectedPaths;
+                paths(selectedPaths);
             }
         }, fileTypes);
-
-        return paths;
     }
 
     public string WindowsSaveLocation(string defExtention)

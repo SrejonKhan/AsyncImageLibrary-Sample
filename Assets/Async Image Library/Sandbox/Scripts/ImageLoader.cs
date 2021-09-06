@@ -37,8 +37,7 @@ public class ImageLoader : MonoBehaviour
     {
         totalSelectedText.text = "0 Images Selected";
         KillAllChild(gallaryGrid);
-        string[] paths = fileExplorer.OpenExplorer();
-        StartCoroutine(StageImages(paths));
+        fileExplorer.OpenExplorer(paths => StartCoroutine(StageImages(paths)));
     }
 
     public void GenerateStagedTextures()
