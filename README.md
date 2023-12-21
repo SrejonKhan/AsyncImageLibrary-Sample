@@ -1,3 +1,15 @@
+# [NEW BETTER EXAMPLE - AsyncImageLibrary-Sandbox](https://github.com/SrejonKhan/AsyncImageLibrary-Sandbox)
+
+**⛔️ DEPRECATED, This Repo ain't Maintained anymore ⛔️**
+
+**👉 Check new [AsyncImageLibrary-Sandbox](https://github.com/SrejonKhan/AsyncImageLibrary-Sandbox) ✔️**
+
+_Extremely sorry for overusing emojis to get attention._
+
+## Old Readme
+<details>
+<summary>Click to expand the old README.</summary>
+
 # Async Image Library - Sample
 
 This is a sandbox type project of [Async Image Library](https://github.com/SrejonKhan/AsyncImageLibrary).
@@ -20,3 +32,5 @@ Please keep in mind, current status of this project is unstable and sketchy.
     Assembly Version Validation can be disabled in Player Settings "Assembly Version Validation"
     ```
     To fix this issue, please **Restart Unity**.
+
+</details>
